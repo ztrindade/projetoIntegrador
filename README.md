@@ -1,7 +1,8 @@
 # Projeto Integrador - Grupo 02
 
-O presentee Projeto Integrador Senac: é composto de dois subprojetos: o indica-api e o indica-estatico. Contém, também, uma pasta contendo os comandos SQL para criação das tabelas MySql utilizadas na aplicação.
-Participaram da sua elaboração:
+O presente Projeto Integrador Senac é composto de dois subprojetos: o indica-api e o indica-estatico.
+Contém, também, uma pasta contendo os comandos SQL para criação das tabelas MySql utilizadas na aplicação.
+Participaram da sua elaboração os alunos:
 * HEITOR ALEXANDRINO DOS SANTOS ARRUDA
 * ABNER ANTONIO JANUARIO MARCELINO
 * MACIEL BATISTA DE FREITAS
