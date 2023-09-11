@@ -1,8 +1,8 @@
 CREATE TABLE Premiacoes (
     Id INT auto_increment PRIMARY KEY ,
     IdProcesso INT NOT NULL,
-	IdIndicacao INT NOT NULL,
-	ValorPremiacao DECIMAL(10,2) NULL,
+    IdIndicacao INT NOT NULL,
+    ValorPremiacao DECIMAL(10,2) NULL,
     createdAt DATETIME,
     updatedAt DATETIME,
 
