@@ -1,0 +1,271 @@
+<app-cabecalho></app-cabecalho>
+
+<div class="container" *ngIf="exibeLista">
+    <div class="row">   
+        <div class="col text-center">
+            <h4>Processos</h4>
+            <span *ngIf="!listaProcessos.length">
+                <h5>Ainda não existem processos</h5> 
+            </span>
+            <span *ngIf="listaProcessos.length">
+                <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">Empresa</th>
+                                <th scope="col">Vaga</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Detalhar</th>
+                                <th scope="col">Ação</th>
+                            </tr>
+                        </thead>
+                        <ng-container *ngFor="let processo of listaProcessos; index as i">
+                            <tbody>
+                            <tr>
+                                <td>{{processo.id}}</td>
+                                <td>{{processo.empresa}}</td>
+                                <td>{{processo.vaga}}</td>
+                                <td>
+                                    <i class="fa fa-unlock" 
+                                        data-toggle="tooltip" data-html="true" title="Processo em andamento"
+                                        *ngIf="processo.aberto"></i>
+                                    <i class="fa fa-lock" 
+                                        data-toggle="tooltip" data-html="true" title="Processo encerrado"
+                                        *ngIf="!processo.aberto"></i>
+                                </td>
+                                <td>
+                                    <i class="fa fa-info" 
+                                    data-toggle="tooltip" data-html="true" title="Informações do processo"
+                                    (click)="detalhaProcesso(processo.id)"></i>
+                                </td>
+                                <td *ngIf="processo.aberto">
+                                    <i class="fa fa-user-plus" 
+                                        *ngIf="podeIndicar"
+                                        data-toggle="tooltip" data-html="true" title="Indicar candidato"
+                                        (click)="montarIndicacao(processo.id)"></i>
+                                    <i class="fa fa-calendar-check-o" 
+                                        *ngIf="podeIncluir"
+                                        data-toggle="tooltip" data-html="true" title="Encerrar processo"
+                                        (click)="encerraProcesso(processo.id)"></i>
+                                </td>
+                                <td *ngIf="!processo.aberto">
+                                    <i class="fa fa-ban" 
+                                        *ngIf="!processo.aberto">
+                                    </i>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </ng-container>
+                </table>
+            </span>
+        </div>
+    </div>
+    <div *ngIf="podeIncluir" class="text-center">
+        <button class="btn btn-outline-primary">
+            <i class="fa fa-plus"></i>
+            <a (click)="toggleIncluir()"> Adicionar processo</a>
+        </button>
+    </div>
+</div>
+
+<div class="container text-center" *ngIf="exibeIncluir">
+    <h4 class="">Incluir novo processo</h4>
+    <form 
+        class="form mt-4" 
+        (ngSubmit)="incluirProcesso()"
+        #incluirForm="ngForm">
+        <div class="form-group mb-2">
+            <input 
+            class="form-control" 
+            placeholder="Nome da empresa" 
+            type="text" 
+            [(ngModel)]="inputEmpresa" 
+            name="empresa"
+            #campoEmpresa="ngModel"
+            required />
+            <app-mensagem 
+                *ngIf="campoEmpresa.invalid && campoEmpresa.touched"
+                mensagem="Obrigatório informar a empresa">
+            </app-mensagem>
+        </div>
+        <div class="form-group mb-2">
+            <input 
+            class="form-control" 
+            placeholder="Nome da vaga" 
+            type="text"
+            [(ngModel)]="inputVaga"
+            name="vaga" 
+            #campoVaga="ngModel"
+            required />
+            <app-mensagem 
+                *ngIf="campoVaga.invalid && campoVaga.touched"
+                mensagem="Obrigatório informar a vaga">
+            </app-mensagem>
+        </div>
+        <div class="form-group mb-2">
+            <input 
+            class="form-control" 
+            placeholder="Valor da premiação" 
+            type="number"
+            [(ngModel)]="inputValor"
+            name="valor" 
+            #campoValor="ngModel"
+            required />
+            <app-mensagem 
+                *ngIf="campoValor.invalid && campoValor.touched"
+                mensagem="Obrigatório informar a vaga">
+            </app-mensagem>
+        </div>
+        <button 
+            class="btn btn-primary btn-block" 
+            type="submit"
+            [disabled]="incluirForm.invalid">Incluir processo
+        </button>
+    </form>
+    <hr>
+    <div>
+        <i class="fa fa-chevron-left"></i>
+        <span (click)="toggleIncluir()"> Voltar para lista</span>
+    </div>
+</div>
+
+<div class="container text-center" *ngIf="exibeDetalhar">
+    <h4>Detalhamento do processo {{detalhe.id}}</h4>
+    <div class="row">
+        <div class="col">Empresa: {{detalhe.empresa}}</div>
+        <div class="col">Vaga: {{detalhe.vaga}}</div>
+        <div class="col">Premiação: R$ {{detalhe.valor}}</div>
+    </div>
+    <div class="row">
+        <div  *ngIf="detalhe.aberto">
+            <div class="col">Processo em andamento</div>    
+        </div>
+        <!-- <div *ngIf="!detalhe.aberto">    
+            <div *ngIf="detalhe.premiado === ''">Processo sem funcionário premiado</div>
+            <div *ngIf="detalhe.premiado !== ''">Premiado: {{detalhe.premiado}}</div>
+        </div> -->
+    </div>
+    <hr>
+    <div *ngIf="this.detalhe.indicacoes.length > 0">
+    </div>
+        <div *ngIf="this.detalhe.indicacoes.length > 0">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Indicante</th>
+                    <th scope="col">Indicado</th>
+                    <th scope="col">Telefone</th>
+                    <th scope="col">Linkedin</th>
+                    <th scope="col">Situação</th>
+                </tr>
+            </thead>
+            <ng-container *ngFor="let indicacao of detalhe.indicacoes; index as i">
+                <tbody>
+                    <tr>
+                        <td>{{indicacao.indicante}}</td>
+                        <td>{{indicacao.nomeIndicado}}</td>
+                        <td>{{indicacao.telefoneIndicado | mask: '(00) 0000-00009'}}</td>
+                        <td>
+                            <a href="{{indicacao.linkedin}}" 
+                                *ngIf="indicacao.linkedin !== ''"
+                                target="_blank"><i class="fa fa-linkedin"></i></a>
+                            <span *ngIf="indicacao.linkedin == ''">Não informado</span>
+                        </td>
+                        <td>
+                            <i class="fa fa-thumbs-up" 
+                                data-toggle="tooltip" data-html="true" title="Indicação aceita"
+                                *ngIf="indicacao.aceita"></i>
+                            <div *ngIf="!detalhe.aberto">
+                                <i class="fa fa-thumbs-down" 
+                                data-toggle="tooltip" data-html="true" title="Indicação não aceita"
+                                *ngIf="!indicacao.aceita"></i>
+                            </div>
+                            <div *ngIf="detalhe.aberto">
+                                <div *ngIf="!indicacao.aceita">
+                                    <i *ngIf="podeIncluir" 
+                                        class="fa fa-check-square-o"
+                                        data-toggle="tooltip" data-html="true" title="Aceitar indicação"
+                                        (click)="aceitarIndicacao(detalhe.indice, indicacao.sequencial)"
+                                    ></i>
+                                    <i *ngIf="!podeIncluir" 
+                                        data-toggle="tooltip" data-html="true" title="Indicação em análise"
+                                        class="fa fa-flag-checkered"></i>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>    
+                </tbody>
+            </ng-container>
+        </table>
+    </div>
+
+    <div *ngIf="detalhe.aberto">
+        <div *ngIf="podeIncluir">
+            <button class="btn btn-outline-primary">
+                <i class="fa fa-calendar-check-o"></i> 
+                <a (click)="encerraProcesso(detalhe.id)"> Encerrar Processo</a>
+            </button>
+        </div>
+        <div *ngIf="podeIndicar">
+            <button class="btn btn-outline-primary">
+                <i class="fa fa-user-plus"></i>
+                <a (click)="montarIndicacao(detalhe.id)"> Indicar candidato</a>
+            </button>
+        </div>
+        </div>
+    <p></p>
+    <div>
+        <button class="btn btn-outline-primary">
+            <i class="fa fa-chevron-left"></i>
+            <a (click)="toggleDetalhar()"> Voltar para lista</a>
+        </button>
+    </div>
+</div>
+
+<div class="container text-center" *ngIf="exibeIndicar">
+    <h4>Indique alguém para participar do processo {{detalhe.id}}</h4>
+    <div class="row">
+        <div class="col">Empresa: {{detalhe.empresa}}</div>
+        <div class="col">Vaga: {{detalhe.vaga}}</div>
+    </div>
+    <form class="form mt-4" [formGroup]="novaIndicacaoForm" (submit)="incluirIndicacao(detalhe.id)">
+        <div class="form-group mb-2">
+            <input type="text" 
+                placeholder="Nome do indicado" 
+                class="form-control"
+                formControlName="nome">
+        </div>    
+        <app-mensagem 
+            *ngIf="novaIndicacaoForm.get('nome')?.touched 
+            && novaIndicacaoForm.get('nome')?.errors"
+            mensagem="Informe o nome com no mínimo 4 caracteres">
+        </app-mensagem>
+            <div class="form-group mb-2">
+            <input type="text" 
+                placeholder="Telefone do indicado" 
+                class="form-control"
+                mask="(00)0000-00009"
+                formControlName="telefone">
+        </div>    
+        <app-mensagem 
+            *ngIf="novaIndicacaoForm.get('telefone')?.touched 
+            && novaIndicacaoForm.get('telefone')?.errors"
+            mensagem="Informe o telefone com DDD + 8 ou 9 caracteres">
+        </app-mensagem>
+        <div class="form-group mb-2">
+            <input type="text" 
+                placeholder="Linkedin (opcional)" 
+                class="form-control"
+                formControlName="linkedin">
+        </div>    
+        <button class="btn btn-primary btn-block" [disabled]="!novaIndicacaoForm.valid">Incluir indicação</button>
+    </form>
+    <hr>
+    <div>
+        <p></p>
+        <button class="btn btn-outline-primary">
+            <i class="fa fa-chevron-left"></i>
+            <a (click)="toggleIndicar()"> Voltar para lista</a>
+        </button>
+    </div>
+</div>
