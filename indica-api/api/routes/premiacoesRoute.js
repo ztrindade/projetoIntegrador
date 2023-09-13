@@ -1,12 +1,12 @@
 const { Router } = require('express');
-const PremiacaoController = require('../controllers/PremiacoesController');
+const PremiacaoController = require('../controllers/premiacoesController');
 
 const router = Router();
 
-router.get('/Premiacoes', PremiacaoController.listarPremiacoes);
-router.get('/Premiacoes/:id', PremiacaoController.consultarPremiacao);
-router.post('/Premiacoes', PremiacaoController.criarPremiacao);
-router.put('/Premiacoes/:id', PremiacaoController.atualizarStatusPremiacao);
-router.delete('/Premiacoes/:id', PremiacaoController.apagarPremiacao);
+router.get('/premiacoes', PremiacaoController.listarPremiacoes);
+router.get('/premiacoes/:id', PremiacaoController.consultarPremiacao);
+router.post('/premiacoes', PremiacaoController.criarPremiacao);
+router.put('/premiacoes/:id', PremiacaoController.atualizarStatusPremiacao);
+router.delete('/premiacoes/:id', PremiacaoController.apagarPremiacao);
 
 module.exports = router;

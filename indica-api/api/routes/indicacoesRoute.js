@@ -1,12 +1,12 @@
 const { Router } = require('express');
-const IndicacaoController = require('../controllers/IndicacoesController');
+const IndicacaoController = require('../controllers/indicacoesController');
 
 const router = Router();
 
-router.get('/Indicacoes', IndicacaoController.listarIndicacoes);
-router.get('/Indicacoes/:id', IndicacaoController.consultarIndicacao);
-router.post('/Indicacoes', IndicacaoController.criarIndicacao);
-router.put('/Indicacoes/:id', IndicacaoController.atualizarStatusIndicacao);
-router.delete('/Indicacoes/:id', IndicacaoController.apagarIndicacao);
+router.get('/indicacoes', IndicacaoController.listarTodasIndicacoes);
+router.get('/indicacoes/:id', IndicacaoController.listarIndicacoesProcesso);
+router.post('/indicacoes', IndicacaoController.criarIndicacao);
+router.put('/indicacoes/:id', IndicacaoController.atualizarStatusIndicacao);
+router.delete('/indicacoes/:id', IndicacaoController.apagarIndicacao);
 
 module.exports = router;

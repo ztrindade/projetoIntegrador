@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // Origem da chave estrangeira da tabela Premiacoes
       Indicacoes.hasMany(models.Premiacoes, {foreignKey: 'IdIndicacao'});
       // Recebe chave estrangeira da tabela Processos
-      Indicacoes.belongsTo(models.Processos, {foreignKey: 'Id'});
+      Indicacoes.belongsTo(models.Processos, {foreignKey: 'IdProcesso'});
     }
   }
   Indicacoes.init({

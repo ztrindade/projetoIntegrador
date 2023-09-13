@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // Recebe chave estrangeira das tabelas Processos e Indicacoes
-      Premiacoes.belongsTo(models.Processos, {foreignKey: 'Id'});
+      Premiacoes.belongsTo(models.Processos, {foreignKey: 'IdProcesso'});
       Premiacoes.belongsTo(models.Indicacoes, {foreignKey: 'IdIndicacao'});
     }
   }
