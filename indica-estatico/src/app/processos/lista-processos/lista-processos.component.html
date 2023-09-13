@@ -152,8 +152,8 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th scope="col">Indicante</th>
-                    <th scope="col">Indicado</th>
+                    <th scope="col">Quem indicou?</th>
+                    <th scope="col">Quem foi indicado</th>
                     <th scope="col">Telefone</th>
                     <th scope="col">Linkedin</th>
                     <th scope="col">Situação</th>
@@ -189,7 +189,7 @@
                                     ></i>
                                     <i *ngIf="!podeIncluir" 
                                         data-toggle="tooltip" data-html="true" title="Indicação em análise"
-                                        class="fa fa-flag-checkered"></i>
+                                        class="fa fa-hourglass-half"></i>
                                 </div>
                             </div>
                         </td>
@@ -198,42 +198,45 @@
             </ng-container>
         </table>
     </div>
-
-    <div *ngIf="detalhe.aberto">
-        <div *ngIf="podeIncluir">
-            <button class="btn btn-outline-primary">
+    
+    <div class="row">
+        <div *ngIf="detalhe.aberto" class="col">
+            <button class="btn btn-outline-primary" *ngIf="podeIncluir">
                 <i class="fa fa-calendar-check-o"></i> 
                 <a (click)="encerraProcesso(detalhe.id)"> Encerrar Processo</a>
             </button>
-        </div>
-        <div *ngIf="podeIndicar">
-            <button class="btn btn-outline-primary">
+            <button class="btn btn-outline-primary" *ngIf="podeIndicar">
                 <i class="fa fa-user-plus"></i>
                 <a (click)="montarIndicacao(detalhe.id)"> Indicar candidato</a>
             </button>
         </div>
+        <div class="col">
+            <button class="btn btn-outline-primary">
+                <i class="fa fa-chevron-left"></i>
+                <a (click)="toggleDetalhar()"> Voltar para lista</a>
+            </button>
         </div>
-    <p></p>
-    <div>
-        <button class="btn btn-outline-primary">
-            <i class="fa fa-chevron-left"></i>
-            <a (click)="toggleDetalhar()"> Voltar para lista</a>
-        </button>
     </div>
 </div>
 
 <div class="container text-center" *ngIf="exibeIndicar">
+    <br>
     <h4>Indique alguém para participar do processo {{detalhe.id}}</h4>
+    <small>Campos obrigatórios indicados com *</small>
+    <br>
     <div class="row">
         <div class="col">Empresa: {{detalhe.empresa}}</div>
         <div class="col">Vaga: {{detalhe.vaga}}</div>
     </div>
     <form class="form mt-4" [formGroup]="novaIndicacaoForm" (submit)="incluirIndicacao(detalhe.id)">
         <div class="form-group mb-2">
+            <div class="row">
+                <span class="text-start">Quem você deseja indicar? *</span>
+            </div>
             <input type="text" 
-                placeholder="Nome do indicado" 
-                class="form-control"
-                formControlName="nome">
+            placeholder="Nome do indicado" 
+            class="form-control"
+            formControlName="nome">
         </div>    
         <app-mensagem 
             *ngIf="novaIndicacaoForm.get('nome')?.touched 
@@ -241,6 +244,9 @@
             mensagem="Informe o nome com no mínimo 4 caracteres">
         </app-mensagem>
             <div class="form-group mb-2">
+            <div class="row">
+                <span class="text-start">Telefone do indicado *</span>
+            </div>
             <input type="text" 
                 placeholder="Telefone do indicado" 
                 class="form-control"
@@ -253,6 +259,9 @@
             mensagem="Informe o telefone com DDD + 8 ou 9 caracteres">
         </app-mensagem>
         <div class="form-group mb-2">
+            <div class="row">
+                <span class="text-start">Lindedin (opcional)</span>
+            </div>
             <input type="text" 
                 placeholder="Linkedin (opcional)" 
                 class="form-control"

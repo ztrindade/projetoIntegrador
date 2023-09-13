@@ -3,6 +3,8 @@ import { Processo, ProcessoRequest, ProcessoResponse } from '../entities/process
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { IndicacaoRequest, IndicacaoResponse } from '../entities/indicacoes';
+import { PremiacaoResponse } from '../entities/premiacoes';
 
 const API = environment.apiUrl;
 
@@ -14,9 +16,21 @@ export class ProcessoService {
 
   constructor(private http:HttpClient) { }
 
+  incluirIndicacao(req: IndicacaoRequest) :Observable<IndicacaoResponse>{
+    return this.http.post<IndicacaoResponse>(`${API}/indicacoes/`, req,);
+  }
+
   incluirProcesso(req: ProcessoRequest) :Observable<ProcessoResponse>{
     return this.http.post<ProcessoResponse>(`${API}/processos/`, req,);
   }
+
+  listarIndicacoes(idProcesso: number) :Observable<IndicacaoResponse[]>{
+    return this.http.get<IndicacaoResponse[]>(`${API}/indicacoes/${idProcesso}`);
+  };
+
+  listarPremiacoes(idProcesso: number) :Observable<PremiacaoResponse[]>{
+    return this.http.get<PremiacaoResponse[]>(`${API}/premiacoes/${idProcesso}`);
+  };
 
   listarProcessos() :Observable<ProcessoResponse[]>{
     return this.http.get<ProcessoResponse[]>(`${API}/processos/`);

@@ -18,7 +18,6 @@ export interface IndicacaoRequest {
 
 export interface IndicacaoResponse {
     Id: number,
-    IdProcesso: number,
     NomeIndicado: string,
     TelefoneIndicado: string,
     MatriculaIndicante: string,
@@ -26,4 +25,5 @@ export interface IndicacaoResponse {
     Linkedin: string,     
     createdAt: Date,
     updatedAt: Date
+    IdProcesso: number,
 }
