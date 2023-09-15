@@ -9,7 +9,7 @@ Participaram da sua elaboração os alunos:
 * JOSE ROBERTO TRINDADE LIMA
 
 ## indica-api
-O indica-api foi elaborado usando node.js, aliado ao express (para controle de roteamento) e sequelize (para integração com o banco de dados MySql). Para utilização, deve-se navegar para a pasta indica-api e executar os seguintes comandos:
+O indica-api foi elaborado usando node.js, aliado ao express (para controle de roteamento), body-parser (para converter as respostas do banco de dados em objetos json) e sequelize (para integração com o banco de dados MySql). Para utilização, deve-se navegar para a pasta indica-api e executar os seguintes comandos:
 ```
 npm install
 npm start
@@ -17,7 +17,7 @@ npm start
 Uma vez iniciada, a api estará disponível na porta localhost:3000.
 
 ## indica-estatico
-O indica-estatico foi elaborado usando node.js, valendo-se do framework Angular (controller), bootstrap (formatação css) e font-awesome (ícones). Para utilização, deve-se navegar para a pasta indica-api e executar os seguintes comandos:
+O indica-estatico foi elaborado usando node.js, com interface provida pelo framework Angular (controller), bootstrap (formatação css) e font-awesome (ícones). Para utilização, deve-se navegar para a pasta indica-api e executar os seguintes comandos:
 ```
 npm install
 npm start
