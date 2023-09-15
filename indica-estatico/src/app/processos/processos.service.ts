@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { IndicacaoRequest, IndicacaoResponse } from '../entities/indicacoes';
-import { PremiacaoResponse } from '../entities/premiacoes';
+import { PremiacaoRequest, PremiacaoResponse } from '../entities/premiacoes';
 
 const API = environment.apiUrl;
 
@@ -16,8 +16,22 @@ export class ProcessoService {
 
   constructor(private http:HttpClient) { }
 
+  atualizarStatusIndicacao(id: number, NovoStatus: string) :Observable<IndicacaoResponse>{
+    const req = { Status: NovoStatus};
+    return this.http.put<IndicacaoResponse>(`${API}/indicacoes/${id}`, req,);
+  }
+
+  atualizarStatusProcesso(id: number, NovoStatus: string) {
+    const req = { Status: NovoStatus} 
+    return this.http.put<ProcessoResponse>(`${API}/processos/${id}`, req);
+  }
+
   incluirIndicacao(req: IndicacaoRequest) :Observable<IndicacaoResponse>{
     return this.http.post<IndicacaoResponse>(`${API}/indicacoes/`, req,);
+  }
+
+  incluirPremiacao(req: PremiacaoRequest) :Observable<PremiacaoResponse>{
+    return this.http.post<PremiacaoResponse>(`${API}/premiacoes/`, req,);
   }
 
   incluirProcesso(req: ProcessoRequest) :Observable<ProcessoResponse>{
@@ -35,10 +49,5 @@ export class ProcessoService {
   listarProcessos() :Observable<ProcessoResponse[]>{
     return this.http.get<ProcessoResponse[]>(`${API}/processos/`);
   };
-
-  atualizarStatusProcesso(id: number, NovoStatus: string) {
-    const req = { Status: NovoStatus} 
-    return this.http.put<ProcessoResponse>(`${API}/processos/${id}`, req);
-  }
 
 }

@@ -26,8 +26,9 @@ export class ListaProcessosComponent implements OnInit {
   inputValor = 0;
 // Input da indicação
   novaIndicacaoForm!: FormGroup;
-
   inputIndicante = '';
+
+  todasIndicacoesAceitas: boolean = true;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -57,44 +58,42 @@ export class ListaProcessosComponent implements OnInit {
 
     aceitarIndicacao(processo: number, indicacao: number) {
       if (window.confirm("Deseja aceitar o candidato indicado?")) {
-        this.listaProcessos[processo].indicacoes[indicacao].aceita = true;
-        this.detalhaProcesso(this.listaProcessos[processo].id);
+        this.processoService.atualizarStatusIndicacao(indicacao, "Aceita").subscribe((response) => {
+          window.alert(`Indicação aceita em ${response.updatedAt}`);
+        });
+        this.detalharProcesso(processo);
       }
     }
 
-    detalhaProcesso(id: number|undefined) {
+    detalharProcesso(id: number) {
       if (id) {
         this.montarDetalhamento(id);
         this.toggleDetalhar();
       }
     }
 
-    encerraProcesso(id: number|undefined) :void{
-      if (window.confirm("Deseja encerrar o processo?")) {
-        this.listaProcessos.forEach((processo) => {
-          if (processo.id === id) {
-            this.processoService.atualizarStatusProcesso(id, "Encerrado").subscribe((response) => {
-              window.alert(`Processo encerrado em ${response.updatedAt}`);
-            })
-            processo.aberto = false;
-            let aux: Array<any> = [];
-            processo.indicacoes.forEach((item) => {
-              if (item.aceita) {
-                const indice = aux
-                .map((x) => x.nome)
-                .indexOf(item.indicante)
-                if (indice === -1) {
-                  aux.push({nome: item.indicante, quantidade: 1});
-                } else {
-                  aux[indice].quantidade = aux[indice].quantidade + 1
-                }
-              }
-            })
-          if (this.exibeDetalhar) {
-            this.toggleDetalhar();
-          }
-        }
+    encerrarProcesso(pid: number) :void{
+      if (window.confirm(`Deseja encerrar o processo ${pid}?`)) {
+        this.processoService.atualizarStatusProcesso(pid, "Encerrado").subscribe((response) => {
+          window.alert(`Processo ${pid} encerrado em ${response.updatedAt}`);
+          this.listaProcessos.forEach((item) => {
+            item.indicacoes.forEach((indicacao) => {
+              if (indicacao.aceita) {
+                const req = {
+                  "ValorPremiacao": item.valor,
+                  "IdIndicacao": indicacao.id,
+                  "IdProcesso": item.id              
+                };
+                this.processoService.incluirPremiacao(req).subscribe(() => {
+                  console.log(`Premiação ${response.id} criada em ${response.createdAt}`);
+                })
+              }  
+            });
+          });
         });
+      }
+      if (this.exibeDetalhar) {
+        this.toggleDetalhar();
       }
     }
 
@@ -113,14 +112,13 @@ export class ListaProcessosComponent implements OnInit {
           }
           this.processoService.incluirIndicacao(req).subscribe((response) => {
             const indicacao:Indicacao = {
+              id: response.id,
               aceita: false,
               indicante: response.MatriculaIndicante,
               linkedin: response.Linkedin,
               nomeIndicado: response.NomeIndicado,
-              telefoneIndicado: response.TelefoneIndicado,
-              sequencial: processo.indicacoes.length + 1,          
+              telefoneIndicado: response.TelefoneIndicado      
             }
-            console.log(response, indicacao);
             processo.indicacoes.push(indicacao);
           })
           this.novaIndicacaoForm.reset();
@@ -146,20 +144,22 @@ export class ListaProcessosComponent implements OnInit {
     }
 
     listarIndicacoes(idProcesso: number, indiceProcesso: number) :void {
+      this.todasIndicacoesAceitas = true;
       if (indiceProcesso > -1) {
         this.listaProcessos[indiceProcesso].indicacoes.length = 0;
         this.processoService.listarIndicacoes(idProcesso).subscribe((response) => {
           response.forEach((item) => {
-            console.log('item', item);
             const indicacao: Indicacao = {
+              id: item.id,
               aceita: (item.Status === "Aceita"),
               indicante: item.MatriculaIndicante,
               linkedin: item.Linkedin,
               nomeIndicado: item.NomeIndicado,
-              telefoneIndicado: item.TelefoneIndicado,
-              sequencial: this.listaProcessos[indiceProcesso].indicacoes.length + 1        
+              telefoneIndicado: item.TelefoneIndicado        
             }
-            console.log('indicacao', indicacao);
+            if (!indicacao.aceita) {
+              this.todasIndicacoesAceitas = false;
+            }
             this.listaProcessos[indiceProcesso].indicacoes.push(indicacao);
           });
         }) ;
@@ -167,15 +167,15 @@ export class ListaProcessosComponent implements OnInit {
     }
 
     listarProcessos() :void {
+      this.listaProcessos.length = 0;
       this.processoService.listarProcessos().subscribe((response) => {
-        // console.log('recuperados os processos ', response);
         response.forEach((item, index) => {
           this.pushProcesso(item, index);
         });
       }) ;
     }
 
-    montarIndicacao(id: number|undefined) {
+    montarIndicacao(id: number) {
       if (id) {
         this.montarDetalhamento(id);
         this.toggleIndicar();
@@ -187,6 +187,22 @@ export class ListaProcessosComponent implements OnInit {
         if (processo.id === id) {
           this.listarIndicacoes(id, index);
           this.detalhe = processo;
+          if (!processo.aberto) {
+            this.processoService.listarPremiacoes(id).subscribe((response) => {
+              const qtPremiados = response.length;
+              switch(qtPremiados) {
+                case 0:
+                  window.alert(`O processo ${id} não teve premiação :/`)
+                  break;
+                case 1:
+                  window.alert(`O processo ${id} teve apenas 1 premiação`)
+                  break;
+                default:
+                  window.alert(`O processo ${id} teve ${qtPremiados} premiado(s)!`)
+                  break;
+                }
+            })
+          }
         }
       })
     }
@@ -201,7 +217,6 @@ export class ListaProcessosComponent implements OnInit {
         valor: item.ValorPremiacao,
         indicacoes: []           
       };
-      // console.log('processo adicionado na lista: ', processo);
       this.listaProcessos.push(processo); 
     }
 

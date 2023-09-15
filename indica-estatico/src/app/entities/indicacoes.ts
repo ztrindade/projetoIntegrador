@@ -1,10 +1,10 @@
 export interface Indicacao {
     aceita: boolean,
+    id: number,
     indicante: string,
     linkedin: string
     nomeIndicado: string,
-    telefoneIndicado: string,
-    sequencial: number
+    telefoneIndicado: string
 }
 
 export interface IndicacaoRequest {
@@ -17,7 +17,7 @@ export interface IndicacaoRequest {
 }
 
 export interface IndicacaoResponse {
-    Id: number,
+    id: number,
     NomeIndicado: string,
     TelefoneIndicado: string,
     MatriculaIndicante: string,

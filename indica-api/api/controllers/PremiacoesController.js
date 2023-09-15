@@ -31,19 +31,6 @@ class PremiacoesController{
         }
     }
 
-    static async consultarPremiacao(req, res) {
-        const { id } = req.params;
-        try {
-            const premiacao = await database.Premiacoes.findOne(
-                { where: { id : Number(id) }}
-            );
-            return res.status(200).json(premiacao);
-        }
-        catch (error) {
-            return res.status(500).json(error.message);
-        }
-    }
-
     static async criarPremiacao(req, res) {
         const novaPremiacao = { ...req.body };
         try {
@@ -55,10 +42,23 @@ class PremiacoesController{
         }
     }
 
-    static async listarPremiacoes(req, res) {
+    static async listarTodasPremiacoes(req, res) {
         try {
             const listaPremiacoes = await database.Premiacoes.findAll();
             return res.status(200).json(listaPremiacoes);
+        }
+        catch (error) {
+            return res.status(500).json(error.message);
+        }
+    }
+
+    static async listarPremiacoesProcesso(req, res) {
+        const { id } = req.params;
+        try {
+            const premiacao = await database.Premiacoes.findAll(
+                { where: { IdProcesso : Number(id) }}
+            );
+            return res.status(200).json(premiacao);
         }
         catch (error) {
             return res.status(500).json(error.message);

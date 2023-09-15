@@ -1,10 +1,16 @@
 export interface PremiacaoResponse
 {
-    "id": number,
     "ValorPremiacao": number,
     "createdAt": Date,
     "updatedAt": Date,
     "IdIndicacao": number,
-    "Id": number,
+    "id": number,
+    "IdProcesso": number
+}
+
+export interface PremiacaoRequest
+{
+    "ValorPremiacao": number,
+    "IdIndicacao": number,
     "IdProcesso": number
 }

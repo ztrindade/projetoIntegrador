@@ -36,7 +36,7 @@
                                 <td>
                                     <i class="fa fa-info" 
                                     data-toggle="tooltip" data-html="true" title="Informações do processo"
-                                    (click)="detalhaProcesso(processo.id)"></i>
+                                    (click)="detalharProcesso(processo.id)"></i>
                                 </td>
                                 <td *ngIf="processo.aberto">
                                     <i class="fa fa-user-plus" 
@@ -46,7 +46,7 @@
                                     <i class="fa fa-calendar-check-o" 
                                         *ngIf="podeIncluir"
                                         data-toggle="tooltip" data-html="true" title="Encerrar processo"
-                                        (click)="encerraProcesso(processo.id)"></i>
+                                        (click)="encerrarProcesso(processo.id)"></i>
                                 </td>
                                 <td *ngIf="!processo.aberto">
                                     <i class="fa fa-ban" 
@@ -185,7 +185,7 @@
                                     <i *ngIf="podeIncluir" 
                                         class="fa fa-check-square-o"
                                         data-toggle="tooltip" data-html="true" title="Aceitar indicação"
-                                        (click)="aceitarIndicacao(detalhe.indice, indicacao.sequencial)"
+                                        (click)="aceitarIndicacao(detalhe.id, indicacao.id)"
                                     ></i>
                                     <i *ngIf="!podeIncluir" 
                                         data-toggle="tooltip" data-html="true" title="Indicação em análise"
@@ -203,7 +203,7 @@
         <div *ngIf="detalhe.aberto" class="col">
             <button class="btn btn-outline-primary" *ngIf="podeIncluir">
                 <i class="fa fa-calendar-check-o"></i> 
-                <a (click)="encerraProcesso(detalhe.id)"> Encerrar Processo</a>
+                <a (click)="encerrarProcesso(detalhe.id)"> Encerrar Processo</a>
             </button>
             <button class="btn btn-outline-primary" *ngIf="podeIndicar">
                 <i class="fa fa-user-plus"></i>
