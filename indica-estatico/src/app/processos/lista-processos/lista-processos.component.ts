@@ -192,13 +192,13 @@ export class ListaProcessosComponent implements OnInit {
               const qtPremiados = response.length;
               switch(qtPremiados) {
                 case 0:
-                  window.alert(`O processo ${id} não teve premiação :/`)
+                  window.alert(`Não houve premiação no processo ${id}`)
                   break;
                 case 1:
-                  window.alert(`O processo ${id} teve apenas 1 premiação`)
+                  window.alert(`Apenas 1 pessoa foi premiada no processo ${id}`)
                   break;
                 default:
-                  window.alert(`O processo ${id} teve ${qtPremiados} premiado(s)!`)
+                  window.alert(`O processo ${id} teve ${qtPremiados} premiado(s)`)
                   break;
                 }
             })
