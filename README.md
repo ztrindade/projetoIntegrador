@@ -8,6 +8,9 @@ Participaram da sua elaboração os alunos:
 * MACIEL BATISTA DE FREITAS
 * JOSE ROBERTO TRINDADE LIMA
 
+## Banco de Dados
+Foi utilizado o SGBD MySql para armazenamento dos dados da aplicação. Os scripts para criação das tabelas está disponível na pasta 'test-files'.
+
 ## indica-api
 O indica-api foi elaborado usando node.js, aliado ao express (para controle de roteamento), body-parser (para converter as respostas do banco de dados em objetos json) e sequelize (para integração com o banco de dados MySql). Para utilização, deve-se navegar para a pasta indica-api e executar os seguintes comandos:
 ```
