@@ -80,18 +80,21 @@ export class ListaProcessosComponent implements OnInit {
           window.alert(mensagem);
           console.log(mensagem);
           this.listaProcessos.forEach((item) => {
-            item.indicacoes.forEach((indicacao) => {
-              if (indicacao.aceita) {
-                const req = {
-                  "ValorPremiacao": item.valor,
-                  "IdIndicacao": indicacao.id,
-                  "IdProcesso": item.id              
-                };
-                this.processoService.incluirPremiacao(req).subscribe((premio) => {
-                  console.log(`Premiação ${premio.id} criada em ${premio.createdAt}`);
-                })
-              }  
-            });
+            if (item.id === pid) {
+              item.aberto = false;
+              item.indicacoes.forEach((indicacao) => {
+                if (indicacao.aceita) {
+                  const req = {
+                    "ValorPremiacao": item.valor,
+                    "IdIndicacao": indicacao.id,
+                    "IdProcesso": item.id              
+                  };
+                  this.processoService.incluirPremiacao(req).subscribe((premio) => {
+                    console.log(`Premiação ${premio.id} criada em ${premio.createdAt}`);
+                  })
+                }  
+              });
+            }
           });
         });
       }
@@ -190,7 +193,7 @@ export class ListaProcessosComponent implements OnInit {
         if (processo.id === id) {
           this.listarIndicacoes(id, index);
           this.detalhe = processo;
-          if (!processo.aberto) {
+          if (!processo.aberto && !this.podeIncluir && !this.podeIndicar) {
             this.processoService.listarPremiacoes(id).subscribe((response) => {
               const qtPremiados = response.length;
               switch(qtPremiados) {
