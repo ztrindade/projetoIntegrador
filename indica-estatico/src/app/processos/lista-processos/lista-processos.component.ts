@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , LOCALE_ID, Inject } from '@angular/core';
 import { TokenService } from 'src/app/autenticacao/token.service';
 import { ProcessoService } from '../processos.service';
 import { Indicacao, Processo, ProcessoRequest, ProcessoResponse } from '../../entities/processos';
@@ -31,6 +31,7 @@ export class ListaProcessosComponent implements OnInit {
   todasIndicacoesAceitas: boolean = true;
 
   constructor(
+    @Inject(LOCALE_ID) public locale: string,
     private formBuilder: FormBuilder,
     private tokenService: TokenService,
     private processoService: ProcessoService,
@@ -74,8 +75,10 @@ export class ListaProcessosComponent implements OnInit {
 
     encerrarProcesso(pid: number) :void{
       if (window.confirm(`Deseja encerrar o processo ${pid}?`)) {
-        this.processoService.atualizarStatusProcesso(pid, "Encerrado").subscribe((response) => {
-          window.alert(`Processo ${pid} encerrado em ${response.updatedAt}`);
+        this.processoService.atualizarStatusProcesso(pid, "Encerrado").subscribe((processo) => {
+          const mensagem:string = `Processo ${pid} encerrado em ${processo.updatedAt}`;  
+          window.alert(mensagem);
+          console.log(mensagem);
           this.listaProcessos.forEach((item) => {
             item.indicacoes.forEach((indicacao) => {
               if (indicacao.aceita) {
@@ -84,8 +87,8 @@ export class ListaProcessosComponent implements OnInit {
                   "IdIndicacao": indicacao.id,
                   "IdProcesso": item.id              
                 };
-                this.processoService.incluirPremiacao(req).subscribe(() => {
-                  console.log(`Premiação ${response.id} criada em ${response.createdAt}`);
+                this.processoService.incluirPremiacao(req).subscribe((premio) => {
+                  console.log(`Premiação ${premio.id} criada em ${premio.createdAt}`);
                 })
               }  
             });
@@ -215,6 +218,8 @@ export class ListaProcessosComponent implements OnInit {
         vaga: item.Vaga,
         aberto: item.Status === "Em andamento" ? true : false,
         valor: item.ValorPremiacao,
+        tsCriacao: item.createdAt,
+        tsAtualizacao: item.updatedAt,
         indicacoes: []           
       };
       this.listaProcessos.push(processo); 

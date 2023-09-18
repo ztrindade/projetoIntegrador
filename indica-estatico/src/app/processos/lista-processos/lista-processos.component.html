@@ -137,13 +137,16 @@
         <div class="col">Premiação: R$ {{detalhe.valor}}</div>
     </div>
     <div class="row">
-        <div  *ngIf="detalhe.aberto">
+        <div *ngIf="detalhe.aberto">
             <div class="col">Processo em andamento</div>    
         </div>
-        <!-- <div *ngIf="!detalhe.aberto">    
-            <div *ngIf="detalhe.premiado === ''">Processo sem funcionário premiado</div>
-            <div *ngIf="detalhe.premiado !== ''">Premiado: {{detalhe.premiado}}</div>
-        </div> -->
+        <div *ngIf="!detalhe.aberto">    
+            <div class="col">Processo concluído</div>    
+        </div>
+        <div *ngIf="!podeIncluir && !podeIndicar">
+            <div class="col">Criado em: {{detalhe.tsCriacao | date: 'medium':'pt'}}</div>
+            <div>Última atualização: {{detalhe.tsAtualizacao | date: 'medium':'pt'}}</div>
+        </div>
     </div>
     <hr>
     <div *ngIf="this.detalhe.indicacoes.length > 0">

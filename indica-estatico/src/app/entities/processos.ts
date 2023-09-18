@@ -7,6 +7,8 @@ export interface Processo {
     vaga: string,
     aberto: boolean
     valor: number,
+    tsCriacao: Date,
+    tsAtualizacao: Date,
     indicacoes: Indicacao[]
 }
 
